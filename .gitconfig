@@ -1,0 +1,38 @@
+[user]
+	name = Jonathan Higgs
+	email = jonathan.higgs.11@mail.wbs.ac.uk
+	signingkey = C:/Users/Jonathan/.ssh/id_ed25519.pub
+[core]
+	autocrlf = false
+	editor = vi
+	default = current
+[diff]
+	algorithm = histogram
+	context = 10
+[fetch]
+	writeCommitGraph = true
+	prune = true
+	prunetags = true
+[gpg]
+	format = ssh
+[init]
+	defaultBranch = main
+[merge]
+	conflictstyle = diff3
+[pull]
+	rebase = true
+[push]
+    autoSetupRemote = true
+    followtags = true
+[rebase]
+	autosquash = true
+    updateRefs = true
+[rerere]
+	enable = true
+[maintenance]
+	repo = D:/projects/graphics/mift/main
+[url "git@github.com:"]
+    insteadOf = "https://github.com/"
+[url "git@github.com:"]
+    insteadOf = "gh:"
+

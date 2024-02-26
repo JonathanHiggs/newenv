@@ -1,0 +1,106 @@
+# Get editor completions based on the config schema
+"$schema" = 'https://starship.rs/config-schema.json'
+
+# Inserts a blank line between shell prompts
+add_newline = true
+
+scan_timeout = 10
+
+# Change the default prompt format
+format = """
+[╭╴ ](black bold)\
+$os\
+$username\
+[@](black bold)\
+$hostname\
+$directory\
+$git_branch\
+$git_state\
+$git_status\
+$git_metrics\
+$fill\
+$cmd_duration\
+$jobs\
+$cmake\
+${custom.msvc}\
+$dotnet\
+$python\
+$time\
+$line_break\
+[╰─](black bold)\
+$character"""
+
+[username]
+style_user = "blue"
+style_root = "blue"
+format = "[$user]($style)"
+disabled = false
+show_always = true
+
+[os]
+disabled = false
+
+[os.symbols]
+Linux = " "
+Raspbian = " "
+Redhat = " "
+RedHatEnterprise = " "
+Ubuntu = " "
+Windows = " "
+
+[hostname]
+style = "green"
+ssh_only = false
+format = "[$hostname]($style) "
+# ssh_symbol = ""
+# format = "[$ssh_symbol$hostname]($style) "
+
+[directory]
+style = "yellow"
+read_only = " R"
+truncation_length = 0
+truncate_to_repo = true
+
+[git_branch]
+style = "purple"
+format = "[$symbol$branch(:$remote_branch)]($style) "
+# ignore_branches = [ "master", "main" ]
+
+[git_metrics]
+disabled = false
+
+[fill]
+symbol = " "
+
+[cmd_duration]
+format = "[$duration]($style) "
+
+[cmake]
+format = "[$symbol($version)]($style) "
+
+[custom.msvc]
+when = "test -v VSCMD_VER"
+style = "purple"
+symbol = "󰘐 "
+command = "echo v${VSCMD_VER}-${VS_YEAR}"
+format = "[$symbol$output]($style) "
+
+[dotnet]
+format = "[$symbol($version)(🎯 $tfm)]($style) "
+
+[python]
+style = "green"
+symbol = " "
+detect_extensions = [ "py", "ipynb" ]
+detect_folders = [ ".venv" ]
+format = "[${symbol}(${version} )(\\($virtualenv\\) )]($style)"
+
+[time]
+style = "bold black"
+format = "[$time]($style)"
+disabled = false
+
+[character]
+success_symbol = '[➜](bold black)'
+error_symbol = '[✗](bold red)'
+

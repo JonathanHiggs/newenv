@@ -1,0 +1,385 @@
+## Git Aliases
+
+# git add
+alias ga='git add'
+alias gaa='git add -A'
+alias gaf='git add -f'
+alias gap='git add --patch'
+
+# git branch
+alias gba='git branch -a'
+alias gbln='git branch --format="%(color:magenta)%(objectname:short=8)  %(color:yellow)%(creatordate:short)  %(color:green)%(align:14)%(creatordate:relative)%(end)  %(color:blue)%(align:18)%(committername)%(end) %(if)%(worktreepath)%(then)%(color:green)+ %(else)%(color:white)  %(end)%(align:40)%(refname:lstrip=2)%(end) %(color:dim white)%(align:50)%(if)%(push)%(then)[%(push:lstrip=2)]%(end)%(end) %(color:reset)%(color:dim green)%(worktreepath)"'
+alias gbl='gbln --sort=-committerdate'
+alias gbli="git branch --sort=-committerdate --format=\"%(refname:lstrip=2)\" | fzf --ansi --height 50% --reverse --preview 'git log -n 40 --pretty=format:\"%C(magenta)%h %C(yellow)%ad %Creset- %Cgreen%<(14,trunc)%ar %Cblue%<(18,trunc)%cn %Cred%d %Creset%s\" --decorate --date=short --color=always {}'"
+alias gbmv='git branch -m'
+alias gbr='git checkout -b'
+
+function gbmvf() { git branch -m "feature/$1"; }
+function gbrf() { git checkout -b "feature/$1"; }
+
+# git branch delete
+alias gbd='git branch -d'
+alias gbD='git branch -D'
+# alias gbd-all='git branch --merged | egrep -v "master|main" | xargs git branch -d'
+# alias gbD-all='git branch --list | egrep -v "master|main" | xargs git branch -D'
+
+function gbdf() { git branch -d "feature/$1"; }
+function gbDf() { git branch -D "feature/$1"; }
+
+function git-archive() {
+    local branch="$1"
+    local new_name="$2"
+
+    if [[ -z "$branch" ]]; then
+        echo "Usage: git-archive [branch] (new-name)"
+        return 1
+    fi
+
+    if [[ -n "$new_name" ]]; then
+        $archive="archive/$new_name"
+    else
+        $archive="archive/$branch"
+    fi
+
+    echo "Archiving $branch to $archive"
+    git branch -m $branch $archive
+    git push origin --delete $branch || return 0
+}
+
+# git checkout
+alias gb='git checkout -n'
+alias gco='git checkout'
+alias gcom='git checkout main'
+# alias gcod='git checkout dev'
+# alias gcop='git checkout prod'
+# alias gcou='git checkout uat'
+
+alias gcoi="git branch --sort=-committerdate --color=always --format='%(align:40)%(refname:lstrip=2)%(end)  %(color:blue)%(align:18)%(committername)%(end)  %(color:yellow)%(creatordate:short)  %(color:green)%(align:14)%(creatordate:relative)%(end)  %(color:dim white)%(align:50)%(if)%(push)%(then)[%(push:lstrip=2)]%(end)%(end)  %(color:reset)%(color:dim green)%(worktreepath)' | fzf --ansi --height 40% --reverse | awk '{ print $1; }' | xargs -o echo"
+
+function gcof() { git checkout "feature/$1"; }
+
+# git clean
+alias gcfd='git clean -fd'
+alias gcl='git checkout .'
+
+# git commit
+alias gc='git commit -m'
+alias gca='git commit --amend --no-edit'
+alias gcedit='git commit --amend'
+# alias gcfix='git add -A && git commit --amend --no-edit'
+alias gcfu='git commit --fixup'
+alias gcfix='gl --color=always --no-merges | fzf --ansi --height 40% --reverse | cut -c -8 | xargs -o git commit --fixup'
+
+# git diff
+alias gd='git diff'
+
+# git fetch
+alias gfa='git fetch --all'
+alias gfp='git fetch --prune'
+alias gft='git fetch --tags -f'
+alias gftp='git fetch --tags --prune --all'
+alias gfftp='git fetch --tags --prune --all -f'
+
+# git log
+alias gl='git log --pretty=format:"%C(magenta)%h %C(yellow)%ad %Creset- %Cgreen%<(14,trunc)%ar %Cblue%<(18,trunc)%cn %Cred%d %Creset%s" --decorate --date=short'
+alias gli='gl --color=always | fzf --ansi --height 60% --reverse'
+alias gll='git log --pretty=format:"%C(magenta)%h %C(yellow)%ad%Cred%d %Creset%s%Cblue [%cn]" --decorate --date=short'
+alias gld='git log --reverse --no-merges --branches=* --date=local --since=midnight --author="$(git config --get user.name)"'
+alias glg='git log --all --decorate --oneline --graph'
+alias glm='git log'
+alias glml='git log --pretty=format:"%C(magenta)%h %C(yellow)%ad %Creset- %Cgreen%<(20,trunc)%ar %Cblue%<(30,trunc)%cn %Cred%d %Creset%n%s%n%N" --decorate --date=short'
+alias gls='git log --stat'
+
+# git merge
+alias gm='git merge --no-edit'
+alias gma='git merge --abort'
+alias gmc='git merge --continue'
+alias gmff='git merge --ff-only --no-edit'
+alias gmnff='git merge --no-ff --no-edit'
+
+alias gmv='git mv'
+
+# git push
+alias gpf='git push --force'
+alias gpo='git push origin'
+function gpoD() { git push origin --delete "$1"; }
+alias gpot='git push origin --tags'
+alias gpou='git push origin -u'
+
+# git pull
+alias gprb='git pull --rebase'
+
+# git rebase
+alias grb='git rebase'
+alias grba='git rebase --abort'
+alias grbc='git rebase --continue'
+alias grbi='git rebase -i'
+alias grbii="gl --color=always --no-merges | fzf --ansi --height 40% --reverse | cut -c -8 | xargs -o git rebase -i"
+alias grbom='gfftp && grb origin/main'
+
+# git reset
+alias grs='git reset'
+alias grsh='git reset --hard'
+alias grss='git reset --soft'
+
+# git status
+alias gs='git status -s'
+alias gsh='git stash'
+alias gshd='git stash drop'
+alias gshp='git stash pop'
+alias gshs='git stash save --keep-index'
+
+# git tag
+alias gt='git tag'
+alias gtd='git tag -d'
+
+# git restore
+alias gu='git restore'
+alias gup='git restore --patch'
+
+# git worktree
+alias gwl='git worktree list'
+alias gwlc='gbl --color=always | grep "D:/projects"'
+alias gwmv='git worktree move'
+alias gwp='git worktree prune'
+
+
+function gwi() {
+    # Init worktree repo
+
+    local name="$1"
+    if [[ -z "${name}" || "${name::1}" == "-" ]]; then
+        echo "gwi - worktree init"
+        echo "Usage: gwi [name]"
+        return
+    fi
+
+    local root="`pwd`/$name"
+    if [[ -d $root ]]; then
+        echo "Directory '$root' already exists"
+        return
+    fi
+
+    echo "Initializing '$name' in '$root/.$name'"
+
+    mkdir $root
+    cd $root
+
+    git init --bare "$root/.$name"
+    git --git-dir "$root/.$name" worktree add main
+
+    cd $root/main
+    set-title "${name^^} - main"
+}
+
+function gwc() {
+    # Clone repo to worktree
+
+    local remote="$1"
+    local name="$2"
+
+    if [[ -z "${remote}" || "${name::1}" == "-" ]]; then
+        echo "gwc - worktree clone"
+        echo "Usage: gwc [remote] (name)"
+        return
+    fi
+
+    if [[ -z "${name}" ]]; then
+        name=`echo $remote | awk -F/ '{print $NF}' | sed 's/\.git$//'`
+    fi
+
+    local root="`pwd`/$name"
+    if [[ -d $root ]]; then
+        echo "Directory '$root' already exists"
+        return
+    fi
+
+    echo "Cloning '$name' in '$root/.$name' from '$remote'"
+
+    mkdir $root
+    cd $root
+
+    git clone --bare "$remote" ".$name"
+    git --git-dir "$root/.$name" worktree add main
+
+    cd $root/main
+    set-title "${name^^} - main"
+}
+
+function gwa() {
+    # Add worktree
+
+    local name="$1"
+    local branch="$2"
+
+    if [[ -z "${name}" || "${name::1}" == "-" ]]; then
+        echo "gwa - worktree add"
+        echo "Usage: gwa [name] (branch)"
+        return
+    fi
+
+    if [[ -z "${branch}" ]]; then
+        branch=$name
+    fi
+
+    local git_root=`git rev-parse --show-toplevel`
+    if [[ -z "${git_root}" ]]; then
+        echo "Error: Not in git repo"
+        return
+    fi
+
+    local worktree_root="${git_root}/../${name}"
+    if [[ -d "${worktree_root}" ]]; then
+        # Existing worktree
+        echo "Directory '`realpath $worktree_root`' already exists"
+        gws $name
+        return
+    fi
+
+    local branch_exists=`git show-ref refs/heads/${branch}`
+    if  [[ -n "${branch_exists}" ]]; then
+        # Existing branch
+        # echo "Branch '${branch}' already exists, cannot create worktree"
+        git worktree add "$worktree_root" "$branch"
+        gws $name
+        return
+    fi
+        
+    # New worktree and branch
+    git worktree add "$worktree_root" -b "$branch"
+    gws $name
+
+    if [[ -e "${git_root}/CMakeUserPresets.json" ]]; then
+        cp "${git_root}/CMakeUserPresets.json" .
+    fi
+
+    if [[ -e "${git_root}/.vs/launch.vs.json" ]]; then
+        mkdir "${worktree_root}/.vs"
+        cp "${git_root}/.vs/launch.vs.json" "${worktree_root}/.vs/launch.vs.json"
+    fi
+}
+
+function gwaf() {
+    # Add worktree
+
+    local name="$1"
+    local branch="$2"
+
+    if [[ -z "${name}" || "${name::1}" == "-" ]]; then
+        echo "gwaf - worktree add feature"
+        echo "Usage: gwaf [name] (branch)"
+        return
+    fi
+
+    if [[ -z "${branch}" ]]; then
+        branch="feature/${name}"
+    elif [[ "${branch::8}" != "feature/" ]]; then
+        branch="feature/${branch}"
+    fi
+
+    gwa "${name}" "${branch}"
+}
+
+function gwr() {
+    # Remove worktree
+
+    local name="$1"
+    if [[ -z "${name}" || "${name::1}" == "-" ]]; then
+        echo "gwr - worktree remove"
+        echo "Usage: gwr [name]"
+        return
+    fi
+
+    local git_root=`git rev-parse --show-toplevel`
+    if [[ -z "${git_root}" ]]; then
+        echo "Error: Not in git repo"
+        return
+    fi
+
+    local worktree_root=`realpath "${git_root}/../${name}"`
+    if [[ ! -d "${worktree_root}" ]]; then
+        echo "Worktree '${worktree_root}' not found"
+        return
+    fi
+
+    local current_worktree=$(basename `pwd`)
+    if [[ $current_worktree == $name ]]; then
+        echo "Switching to main"
+        gws main
+    fi
+
+    git worktree remove "$name"
+}
+
+function gwrd() {
+    # Remove worktree and branch
+
+    local name="$1"
+    if [[ -z "${name}" || "${name::1}" == "-" ]]; then
+        echo "gwrd - worktree remove and branch delete"
+        echo "Usage: gwr [name]"
+        return
+    fi
+
+    local git_root=`git rev-parse --show-toplevel`
+    if [[ -z "${git_root}" ]]; then
+        echo "Error: Not in git repo"
+        return
+    fi
+    
+    local worktree_root=`realpath "${git_root}/../${name}"`
+    if [[ ! -d "${worktree_root}" ]]; then
+        echo "Worktree '${worktree_root}' not found"
+        return
+    fi
+
+    local current_worktree=$(basename `pwd`)
+    if [[ "$name" == "$current_worktree" ]]; then
+        echo "Switching to main"
+        gws main
+    fi
+
+    local repo_name=`basename $(dirname $(git rev-parse --show-toplevel))`
+    local branch=`git worktree list | grep "$repo_name/$name" | sed -n 's/.* \[\(.*\)\]$/\1/p'`
+
+    if [[ -z "$branch" ]]; then
+        echo "Branch not found for '${name}'"
+        return
+    fi
+    
+    # if [[ -z "${branch}" ]]; then
+    #     branch=`git for-each-ref --format='%(refname:short)' refs/heads/ | grep ${name} | head -n 1`
+    # fi
+    # if [[ -z "${branch}" ]]; then
+    #     echo "Branch not found for '${name}', please supply as second argument"
+    #     return
+    # fi
+    
+    echo "Removing worktree '$name' and branch '$branch'"
+    
+    git worktree remove "$name" && git branch -D "$branch"
+}
+
+function gws() { 
+    # Switch to worktree
+
+    local name="$1"
+
+    if [[ -z "${name}" || "${name::1}" == "-" ]]; then
+        echo "Missing argument: [name]"
+        echo "Usage: gws [name]"
+        return
+    fi
+
+    local git_root=`git rev-parse --show-toplevel`
+
+    if [[ -z "${git_root}" ]]; then
+        echo "Error: Not in git repo"
+        return
+    fi
+
+    cd $git_root/../$name;
+    
+    local repo_name=`basename $(dirname $(git rev-parse --show-toplevel))`
+    set-title "${repo_name^^} - ${name}"
+}
